@@ -1,0 +1,26 @@
+﻿<Window x:Class="RadControlsDiagram.GameSettings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="GameSettings" Height="300" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <DataGrid Name="dgItems" CanUserAddRows="False" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Stat" Binding="{Binding Name, Mode=TwoWay}" />
+                <DataGridTextColumn Header="Min" Binding="{Binding Min, Mode=TwoWay}" />
+                <DataGridTextColumn Header="Max" Binding="{Binding Max, Mode=TwoWay}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Name="btnAdd" Grid.Column="0" Content="Add" VerticalAlignment="Center" Click="btnAdd_Click_1"  Margin="5,0,5,0"/>
+            <Button Name="btnDelete" Grid.Column="1" Content="Delete" VerticalAlignment="Center" Click="btnDelete_Click_1" Margin="5,0,5,0"/>
+        </Grid>
+    </Grid>
+</Window>

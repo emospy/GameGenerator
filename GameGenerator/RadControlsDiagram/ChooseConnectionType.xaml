@@ -1,0 +1,24 @@
+﻿<Window x:Class="RadControlsDiagram.ChooseConnectionType"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ChooseConnectionType" Height="100" Width="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>   
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Label Content="ConnectionType"/>
+        <ComboBox Name="cmbType" Grid.Column="1">
+            <ComboBoxItem Content="Decision"/>
+            <ComboBoxItem Content="Chance"/>
+            <ComboBoxItem Content="Battle"/>
+            <ComboBoxItem Content="Condition"/>
+        </ComboBox>
+        <Button Name="btnOk" Grid.Row="1" Content="OK" Click="btnOk_Click_1"/>
+        <Button Name="btnCancel" Grid.Row="1" Grid.Column="1" Content="Cancel" Click="btnCancel_Click_1" IsCancel="True"/>
+    </Grid>
+</Window>
