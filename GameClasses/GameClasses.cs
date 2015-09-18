@@ -36,7 +36,7 @@ namespace GameClasses
 		public List<Skill> Skills;
 		public List<Stat> Stats;
 		public Choices Choices;
-        public BitmapImage image;
+        public Byte[] image;
     }
 
 	[Serializable]
@@ -53,7 +53,9 @@ namespace GameClasses
 		public List<Skill> lstSkills;
 		[XmlArray("Stats"), XmlArrayItem(typeof(Stat), ElementName = "Stat")]
 		public List<Stat> lstStats;
-		public Epizode()
+        [XmlArray("ByteArray"), XmlArrayItem(typeof(byte), ElementName = "Byte")]
+        public Byte[] image;
+        public Epizode()
 		{
 			this.lstInventories = new List<Inventory>();
 			this.lstSkills = new List<Skill>();

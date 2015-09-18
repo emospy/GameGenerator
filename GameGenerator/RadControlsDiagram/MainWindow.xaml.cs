@@ -75,7 +75,6 @@ namespace RadControlsDiagram
 			{
 				shape.Tag = Ep;
 				e.Shape.Content = ((Epizode)shape.Tag).EpizodeNumber;
-				//e.Shape.Content = Ep;
 			}
 		}
 
