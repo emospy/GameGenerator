@@ -14,6 +14,8 @@ using System.Windows.Shapes;
 using GameClasses;
 using Microsoft.Win32;
 using System.IO;
+using System.Drawing;
+using System.Windows.Markup;
 
 namespace RadControlsDiagram
 {
@@ -41,12 +43,28 @@ namespace RadControlsDiagram
             this.dgInventories.ItemsSource = this.Epizode.lstInventories;
             this.dgStats.ItemsSource = this.Epizode.lstStats;
 
-            if (this.Epizode.image != null)
+            if (this.Epizode.LargeIcon != null)
             {
-                MemoryStream stream = new MemoryStream(this.Epizode.image);
-                BmpBitmapDecoder decoder = new BmpBitmapDecoder(stream, BitmapCreateOptions.None, BitmapCacheOption.Default);
+                //MemoryStream memory = new MemoryStream();
 
-                this.imgBox.Source = decoder.Frames[0];
+                //    this.Epizode.LargeIcon.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+                //    memory.Position = 0;
+                //    BitmapImage bitmapimage = new BitmapImage();
+                //    bitmapimage.BeginInit();
+                //    bitmapimage.StreamSource = memory;
+                //    bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                //    bitmapimage.EndInit();
+
+                //    this.imgBox.Source = bitmapimage;
+
+
+                //Image imgObj = XamlReader.Parse(xamlstring) as Image;
+                BitmapImage bitmapimage = new BitmapImage();
+                bitmapimage.BeginInit();
+                bitmapimage.StreamSource = new MemoryStream(this.Epizode.LargeIconSerialized);
+                bitmapimage.EndInit();
+                this.imgBox.Source = bitmapimage;
+
             }
         }
 
@@ -102,14 +120,14 @@ namespace RadControlsDiagram
             this.Epizode.EpizodeText = this.txtEpizodeText.Text;
             this.DialogResult = true;
 
-            BitmapImage src = (BitmapImage)this.imgBox.Source;
+            //Bitmap src = (Bitmap)this.imgBox.Source;
 
-            MemoryStream stream = new MemoryStream();
-            BmpBitmapEncoder encoder = new BmpBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(src.UriSource));
-            encoder.Save(stream);
-            stream.Flush();
-            this.Epizode.image = stream.ToArray();
+            //MemoryStream stream = new MemoryStream();
+            //BmpBitmapEncoder encoder = new BmpBitmapEncoder();
+            //encoder.Frames.Add(BitmapFrame.Create(src.UriSource));
+            //encoder.Save(stream);
+            //stream.Flush();
+            //this.Epizode.LargeIcon = src.;
 
             this.Close();
         }
@@ -128,23 +146,29 @@ namespace RadControlsDiagram
                 return;
             }
 
-            BitmapImage myBitmapImage = new BitmapImage();
+            //BitmapImage myBitmapImage = new BitmapImage();
 
-            // BitmapImage.UriSource must be in a BeginInit/EndInit block
-            myBitmapImage.BeginInit();
-            myBitmapImage.UriSource = new Uri(ofd.FileName);
+            //myBitmapImage.BeginInit();
+            //myBitmapImage.UriSource = new Uri(ofd.FileName);
+            //myBitmapImage.EndInit();
 
-            // To save significant application memory, set the DecodePixelWidth or  
-            // DecodePixelHeight of the BitmapImage value of the image source to the desired 
-            // height or width of the rendered image. If you don't do this, the application will 
-            // cache the image as though it were rendered as its normal size rather then just 
-            // the size that is displayed.
-            // Note: In order to preserve aspect ratio, set DecodePixelWidth
-            // or DecodePixelHeight but not both.
-            //myBitmapImage.DecodePixelWidth = 200;
-            myBitmapImage.EndInit();
+            FileStream fs = new FileStream(ofd.FileName, FileMode.Open);
 
-            this.imgBox.Source = myBitmapImage;
+            var a = new Bitmap(fs);
+            this.Epizode.LargeIcon = a;
+
+            using (MemoryStream memory = new MemoryStream())
+            {
+                a.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+                memory.Position = 0;
+                BitmapImage bitmapimage = new BitmapImage();
+                bitmapimage.BeginInit();
+                bitmapimage.StreamSource = memory;
+                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapimage.EndInit();
+
+                this.imgBox.Source = bitmapimage;
+            }
         }
     }
 }

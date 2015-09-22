@@ -234,8 +234,6 @@ namespace RadControlsDiagram
 			StringReader sr = new StringReader((e.Shape as RadDiagramShape).Content.ToString());
 			(e.Shape as RadDiagramShape).Tag = (Epizode)serializer.Deserialize(sr);
 
-
-
 			//(e.Shape as RadDiagramShape).Tag = (e.Shape as RadDiagramShape).Content;
 			(e.Shape as RadDiagramShape).Content = ((Epizode)(e.Shape as RadDiagramShape).Tag).EpizodeNumber;
 		}

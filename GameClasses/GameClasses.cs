@@ -5,6 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.Windows.Media.Imaging;
+using System.ComponentModel;
+using System.IO;
+using System.Drawing.Imaging;
+using System.Drawing;
 
 namespace GameClasses
 {
@@ -53,8 +57,42 @@ namespace GameClasses
 		public List<Skill> lstSkills;
 		[XmlArray("Stats"), XmlArrayItem(typeof(Stat), ElementName = "Stat")]
 		public List<Stat> lstStats;
-        [XmlArray("ByteArray"), XmlArrayItem(typeof(byte), ElementName = "Byte")]
-        public Byte[] image;
+
+        [XmlIgnore]
+        public Bitmap LargeIcon { get; set; }
+
+        [XmlIgnore]
+        public MemoryStream ms;
+
+        [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
+        [XmlElement("LargeIcon")]
+        public byte[] LargeIconSerialized
+        {
+            get
+            { // serialize
+                if (LargeIcon == null) return null;
+                ms = new MemoryStream();
+                {
+                    LargeIcon.Save(ms, ImageFormat.Bmp);
+                    return ms.ToArray();
+                }
+            }
+            set
+            { // deserialize
+                if (value == null)
+                {
+                    LargeIcon = null;
+                }
+                else
+                {
+                    ms = new MemoryStream(value);
+                    {
+                        LargeIcon = new Bitmap(ms);
+                    }
+                }
+            }
+        }
+
         public Epizode()
 		{
 			this.lstInventories = new List<Inventory>();
