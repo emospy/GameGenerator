@@ -314,6 +314,7 @@ namespace RadControlsDiagram
 					Ep.Skills = Source.lstSkills;
 					Ep.Stats = Source.lstStats;
 					Ep.Text = Source.EpizodeText;
+                    Ep.image = Source.LargeIconSerialized;
 					Ep.Choices = new Choices();
 
 					Game.lstEpizodes.Add(Ep);

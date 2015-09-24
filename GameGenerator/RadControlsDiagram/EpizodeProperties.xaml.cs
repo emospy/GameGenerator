@@ -45,20 +45,6 @@ namespace RadControlsDiagram
 
             if (this.Epizode.LargeIcon != null)
             {
-                //MemoryStream memory = new MemoryStream();
-
-                //    this.Epizode.LargeIcon.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
-                //    memory.Position = 0;
-                //    BitmapImage bitmapimage = new BitmapImage();
-                //    bitmapimage.BeginInit();
-                //    bitmapimage.StreamSource = memory;
-                //    bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-                //    bitmapimage.EndInit();
-
-                //    this.imgBox.Source = bitmapimage;
-
-
-                //Image imgObj = XamlReader.Parse(xamlstring) as Image;
                 BitmapImage bitmapimage = new BitmapImage();
                 bitmapimage.BeginInit();
                 bitmapimage.StreamSource = new MemoryStream(this.Epizode.LargeIconSerialized);
