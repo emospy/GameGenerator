@@ -19,6 +19,7 @@ using Microsoft.Win32;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Controls.Diagrams;
 using Telerik.Windows.Diagrams.Core;
+using System.Security.Cryptography;
 
 namespace RadControlsDiagram
 {
@@ -36,7 +37,6 @@ namespace RadControlsDiagram
 			CommandManager.RegisterClassCommandBinding(typeof(MainWindow), saveBinding);
 			
 		}
-
 
 		public MainWindow()
 		{
@@ -99,6 +99,11 @@ namespace RadControlsDiagram
 					case ConnectionTypes.eCondition:
 						wind = new ConditionSettings(ConnectionContents);
 						break;
+                    case ConnectionTypes.eChanceRollback:
+                        {
+                            wind = new RollBackSettings(ConnectionContents);
+                            break;
+                        }
 					case ConnectionTypes.eInventoryCondition:
 						throw new ArgumentOutOfRangeException();
 						break;
@@ -112,9 +117,11 @@ namespace RadControlsDiagram
 				{
 					e.Connection.TargetCapType = CapType.Arrow1Filled;
 					e.Connection.Content = ConnectionContents;
-					return;
+                    
+                    return;
 				}
-			}
+               // this.IgnoreSelection = false;
+            }
 			this.diagram.RemoveConnection(e.Connection);
 		}
 
@@ -236,7 +243,8 @@ namespace RadControlsDiagram
 
 			//(e.Shape as RadDiagramShape).Tag = (e.Shape as RadDiagramShape).Content;
 			(e.Shape as RadDiagramShape).Content = ((Epizode)(e.Shape as RadDiagramShape).Tag).EpizodeNumber;
-		}
+            this.diagram.AllowDelete = true;
+        }
 
 		private void btnGameSettings_Click_1(object sender, RoutedEventArgs e)
 		{
@@ -252,6 +260,8 @@ namespace RadControlsDiagram
 			string XML = e.SerializationInfo["Content"].ToString();
 			StringReader sr = new StringReader(XML);
 			(e.OriginalSource as RadDiagramConnection).Content = (ConnectionXML)serializer.Deserialize(sr);
+
+            this.diagram.AllowDelete = true;
 
 			//(e.Shape as RadDiagramShape).Tag = (e.Shape as RadDiagramShape).Content;
 			//(e.Source as RadDiagramConnection).Content = ((ConnectionXML)(e.Source as RadDiagramConnection).Tag).Type;
@@ -313,7 +323,7 @@ namespace RadControlsDiagram
 					Ep.Inventories = Source.lstInventories;
 					Ep.Skills = Source.lstSkills;
 					Ep.Stats = Source.lstStats;
-					Ep.Text = Source.EpizodeText;
+                    Ep.Text = Crypto.Encrypt(Source.EpizodeText, "pass");
                     Ep.image = Source.LargeIconSerialized;
 					Ep.Choices = new Choices();
 
@@ -324,37 +334,60 @@ namespace RadControlsDiagram
 			foreach (RadDiagramConnection con in this.diagram.Connections)
 			{
 				var source = con.Source as RadDiagramShape;
-				var Epizode = source.Tag as Epizode;
+                Epizode Epizode;
+                try
+                {
+                    Epizode = source.Tag as Epizode;
+                }
+                catch
+                {
+                    this.diagram.SelectedItem = con;
+                    MessageBox.Show("Hanging connection");
+                    return;
+                    
+                }
 				var EpizodeXML = Game.lstEpizodes.FirstOrDefault(ep => ep.ID == Epizode.EpizodeNumber);
 				var Choice = con.Content as ConnectionXML;
 				if (EpizodeXML.Choices == null)
 				{
 					EpizodeXML.Choices = new Choices();
 				}
-				switch (Choice.Type)
-				{
-					case ConnectionTypes.eDecision:
-						Choice.Decision.GoTo = ((Epizode)((RadDiagramShape)con.Target).Tag).EpizodeNumber;
-						EpizodeXML.Choices.Decisions.Add(Choice.Decision);
-						break;
-					case ConnectionTypes.eChance:
-						Choice.Chance.GoTo = ((Epizode)((RadDiagramShape)con.Target).Tag).EpizodeNumber;
-						EpizodeXML.Choices.Chances.Add(Choice.Chance);
-						break;
-					case ConnectionTypes.eBattle:
-						Choice.Battle.GoTo = ((Epizode)((RadDiagramShape)con.Target).Tag).EpizodeNumber;
-						EpizodeXML.Choices.Battles.Add(Choice.Battle);
-						break;
-					case ConnectionTypes.eCondition:
-						Choice.Condition.GoTo = ((Epizode)((RadDiagramShape)con.Target).Tag).EpizodeNumber;
-						EpizodeXML.Choices.Conditions.Add(Choice.Condition);
-						break;
-					case ConnectionTypes.eInventoryCondition:
-						EpizodeXML.Choices.InventoryConditions.Add(Choice.InventoryCondition);
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
+                try {
+                    switch (Choice.Type)
+                    {
+                        case ConnectionTypes.eDecision:
+                            Choice.Decision.GoTo = ((Epizode)((RadDiagramShape)con.Target).Tag).EpizodeNumber;
+                            EpizodeXML.Choices.Decisions.Add(Choice.Decision);
+                            break;
+                        case ConnectionTypes.eChance:
+                            Choice.Chance.GoTo = ((Epizode)((RadDiagramShape)con.Target).Tag).EpizodeNumber;
+                            EpizodeXML.Choices.Chances.Add(Choice.Chance);
+                            break;
+                        case ConnectionTypes.eBattle:
+                            Choice.Battle.GoTo = ((Epizode)((RadDiagramShape)con.Target).Tag).EpizodeNumber;
+                            EpizodeXML.Choices.Battles.Add(Choice.Battle);
+                            break;
+                        case ConnectionTypes.eCondition:
+                            Choice.Condition.GoTo = ((Epizode)((RadDiagramShape)con.Target).Tag).EpizodeNumber;
+                            EpizodeXML.Choices.Conditions.Add(Choice.Condition);
+                            break;
+                        case ConnectionTypes.eChanceRollback:
+                            Choice.Condition.GoTo = ((Epizode)((RadDiagramShape)con.Target).Tag).EpizodeNumber;
+                            EpizodeXML.Choices.Conditions.Add(Choice.Condition);
+                            break;
+                        case ConnectionTypes.eInventoryCondition:
+                            EpizodeXML.Choices.InventoryConditions.Add(Choice.InventoryCondition);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+                catch
+                {
+                    this.diagram.SelectedItem = con;
+                    MessageBox.Show("Hanging destination connection");
+                    return;
+                }
 			}
 
 			var dialog = new SaveFileDialog();
@@ -411,49 +444,20 @@ namespace RadControlsDiagram
 
 		private void btnAddInput_Click_1(object sender, RoutedEventArgs e)
 		{
-			if (this.diagram.SelectedItem is RadDiagramContainerShape)
-			{
-				var cont = (RadDiagramContainerShape)this.diagram.SelectedItem;
-				cont.IsResizingEnabled = false;
-
-				RadDiagramShape shape = new RadDiagramShape();
-				shape.Tag = new Epizode();
-				shape.Position = new Point { X = 0, Y = 10 * cont.Children.Count() };
-				shape.IsDraggingEnabled = false;
-				shape.IsResizingEnabled = false;
-				
-				shape.Content = "Input " + cont.Children.Count();
-				
-				
-				cont.Items.Add(shape);
-				shape.BorderBrush = this.diagram.Background;
-				shape.Background = this.diagram.Background;
-				this.RemoveShapeConnectors(shape);
-
-				List<RadDiagramShapeBase> lstItems = new List<RadDiagramShapeBase>();
-
-				lstItems.Add(cont);
-
-				foreach (var i in cont.Items)
-				{
-					if (i is RadDiagramShape)
-					{
-						lstItems.Add((RadDiagramShape)i);
-					}
-				}
-
-				var lstShapes = lstItems.ToArray<IShape>();
-				this.diagram.Group("1", lstShapes);
-				//lstShapes.Add((RadDiagramShape)cont);
-
-				//this.diagram.Group("1", lstShapes);
-			}
+            this.diagram.AllowDelete = true;
+            if(this.diagram.SelectedItem != null)
+            {
+                var Item = this.diagram.SelectedItem;
+                
+                this.diagram.Items.Remove(Item);
+                
+            }
 		}
 		
 		private void diagram_CommandExecuted_1(object sender, CommandRoutedEventArgs e)
 		{
 			var comm = e.Command.Name;
-			if (comm == "Delete Items")
+			if (comm == "Delete Items" || comm == "Cut Items")
 			{
 				if (this.diagram.SelectedItem is RadDiagramContainerShape)
 				{
@@ -463,6 +467,13 @@ namespace RadControlsDiagram
 						cont.Items.Remove(item);
 					}
 				}
+                else
+                {
+                    var cont = (RadDiagramShape)this.diagram.SelectedItem;
+                    e.Handled = true;
+                    this.diagram.Items.Remove(cont);
+                    
+                }
 			}
 		}
 		
@@ -517,8 +528,93 @@ namespace RadControlsDiagram
 		}
 	}
 
-	//internal class MyRadDiagram : RadDiagram
-	//{
-	//	Telerik.Windows.Diagrams.Core.ICommand DeleteCommand
-	//}
+    static internal class Crypto
+    {
+        // Define the secret salt value for encrypting data
+        private static readonly byte[] salt = Encoding.ASCII.GetBytes("Xamarin.iOS Version: 7.0.6.168");
+
+        /// <summary>
+        /// Takes the given text string and encrypts it using the given password.
+        /// </summary>
+        /// <param name="textToEncrypt">Text to encrypt.</param>
+        /// <param name="encryptionPassword">Encryption password.</param>
+        internal static string Encrypt(string textToEncrypt, string encryptionPassword)
+        {
+            var algorithm = GetAlgorithm(encryptionPassword);
+
+            //Anything to process?
+            if (textToEncrypt == null || textToEncrypt == "") return "";
+
+            byte[] encryptedBytes;
+            using (ICryptoTransform encryptor = algorithm.CreateEncryptor(algorithm.Key, algorithm.IV))
+            {
+                byte[] bytesToEncrypt = Encoding.UTF8.GetBytes(textToEncrypt);
+                encryptedBytes = InMemoryCrypt(bytesToEncrypt, encryptor);
+            }
+            return Convert.ToBase64String(encryptedBytes);
+        }
+
+        /// <summary>
+        /// Takes the given encrypted text string and decrypts it using the given password
+        /// </summary>
+        /// <param name="encryptedText">Encrypted text.</param>
+        /// <param name="encryptionPassword">Encryption password.</param>
+        internal static string Decrypt(string encryptedText, string encryptionPassword)
+        {
+            var algorithm = GetAlgorithm(encryptionPassword);
+
+            //Anything to process?
+            if (encryptedText == null || encryptedText == "") return "";
+
+            byte[] descryptedBytes;
+            using (ICryptoTransform decryptor = algorithm.CreateDecryptor(algorithm.Key, algorithm.IV))
+            {
+                byte[] encryptedBytes = Convert.FromBase64String(encryptedText);
+                descryptedBytes = InMemoryCrypt(encryptedBytes, decryptor);
+            }
+            return Encoding.UTF8.GetString(descryptedBytes);
+        }
+
+        /// <summary>
+        /// Performs an in-memory encrypt/decrypt transformation on a byte array.
+        /// </summary>
+        /// <returns>The memory crypt.</returns>
+        /// <param name="data">Data.</param>
+        /// <param name="transform">Transform.</param>
+        private static byte[] InMemoryCrypt(byte[] data, ICryptoTransform transform)
+        {
+            MemoryStream memory = new MemoryStream();
+            using (Stream stream = new CryptoStream(memory, transform, CryptoStreamMode.Write))
+            {
+                stream.Write(data, 0, data.Length);
+            }
+            return memory.ToArray();
+        }
+
+        /// <summary>
+        /// Defines a RijndaelManaged algorithm and sets its key and Initialization Vector (IV) 
+        /// values based on the encryptionPassword received.
+        /// </summary>
+        /// <returns>The algorithm.</returns>
+        /// <param name="encryptionPassword">Encryption password.</param>
+        private static RijndaelManaged GetAlgorithm(string encryptionPassword)
+        {
+            // Create an encryption key from the encryptionPassword and salt.
+            var key = new Rfc2898DeriveBytes(encryptionPassword, salt);
+
+            // Declare that we are going to use the Rijndael algorithm with the key that we've just got.
+            var algorithm = new RijndaelManaged();
+            int bytesForKey = algorithm.KeySize / 8;
+            int bytesForIV = algorithm.BlockSize / 8;
+            algorithm.Key = key.GetBytes(bytesForKey);
+            algorithm.IV = key.GetBytes(bytesForIV);
+            return algorithm;
+        }
+
+    }
+
+    //internal class MyRadDiagram : RadDiagram
+    //{
+    //	Telerik.Windows.Diagrams.Core.ICommand DeleteCommand
+    //}
 }

@@ -28,7 +28,7 @@ namespace RadControlsDiagram
 			if (this.connection.Decision == null)
 			{
 				this.connection.Decision = new Decision();
-				this.connection.Decision.Text = "Продължи";
+				this.connection.Decision.Text = "Continue";
 			}
 			
 			this.txtText.Text = this.connection.Decision.Text;

@@ -17,6 +17,7 @@
             <ComboBoxItem Content="Chance"/>
             <ComboBoxItem Content="Battle"/>
             <ComboBoxItem Content="Condition"/>
+            <ComboBoxItem Content="Rollback"/>
         </ComboBox>
         <Button Name="btnOk" Grid.Row="1" Content="OK" Click="btnOk_Click_1"/>
         <Button Name="btnCancel" Grid.Row="1" Grid.Column="1" Content="Cancel" Click="btnCancel_Click_1" IsCancel="True"/>

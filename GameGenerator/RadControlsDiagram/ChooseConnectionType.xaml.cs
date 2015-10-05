@@ -28,6 +28,7 @@ namespace RadControlsDiagram
 		public ChooseConnectionType()
 		{
 			InitializeComponent();
+            this.cmbType.SelectedIndex = 0;
 		}
 
 		private void btnOk_Click_1(object sender, RoutedEventArgs e)

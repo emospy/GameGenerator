@@ -12,23 +12,7 @@
             <ColumnDefinition Width="100"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <!--<telerik:RadRibbonBar Grid.Column="0" Grid.RowSpan="2" WindowIconVisibility="Hidden" TitleBarVisibility="Hidden" ApplicationButtonVisibility="Hidden" HelpButtonVisibility="Hidden" VerticalContentAlignment="Center" con >
-            <telerik:RadRibbonTab >
-                <telerik:RadRibbonGroup>
-                    <telerik:RadRibbonButton  Name="btnSelect" Click="btnSelect_Click_1" Content="Select"/>
-                    <telerik:RadRibbonButton Name="btnPan" Click="btnPan_Click_1" Content="Pan"/>
-                    <telerik:RadRibbonButton Name="btnConnector" Click="btnConnector_Click_1" Content="Connect"/>
-                    <telerik:RadRibbonButton Name="btnNew" Click="btnNew_Click_1" Content="New shape"/>   
-                </telerik:RadRibbonGroup>
-                <telerik:RadRibbonGroup>
-                    <telerik:RadRibbonButton Name="btnGameSettings" Click="btnGameSettings_Click_1"  Content="Save"/>
-                </telerik:RadRibbonGroup>
-                <telerik:RadRibbonGroup>
-                    <telerik:RadRibbonButton Name="btnSave" Click="btnSave_Click_1" Content="Save"/>
-                    <telerik:RadRibbonButton Name="btnLoad" Click="btnLoad_Click_1" Content="Load"/>
-                </telerik:RadRibbonGroup>
-            </telerik:RadRibbonTab>
-        </telerik:RadRibbonBar>-->
+        
         <StackPanel Name="sp1" Orientation="Vertical">
             <Button Name="btnSelect" Click="btnSelect_Click_1" Content="Select"/>
             <Button Name="btnPan" Click="btnPan_Click_1" Content="Pan"/>
@@ -38,9 +22,8 @@
             <Button Name="btnSave" Click="btnSave_Click_1" Content="Save"/>
             <Button Name="btnLoad" Click="btnLoad_Click_1" Content="Load"/>
             <Button Name="btnGenerateGame" Click="btnGenerateGame_Click_1"  Content="Generate Game"/>
-            <Button Name="btnGenerateContainer" Click="btnGenerateContainer_Click_1"  Content="Generate container"/>
             <Button Name="btnAddInput" Click="btnAddInput_Click_1"  Content="Add input"/>
         </StackPanel>
-        <telerik:RadDiagram Grid.Column="1" Name="diagram" ShapeDoubleClicked="diagram_ShapeDoubleClicked_1" SelectionChanged="diagram_SelectionChanged_1" ConnectionManipulationCompleted="diagram_ConnectionManipulationCompleted_1" ShapeDeserialized="diagram_ShapeDeserialized" ConnectionDeserialized="diagram_ConnectionDeserialized_1" CommandExecuted="diagram_CommandExecuted_1" KeyDown="diagram_KeyDown_1"  AllowDelete="False" />
+        <telerik:RadDiagram Grid.Column="1" Name="diagram" ShapeDoubleClicked="diagram_ShapeDoubleClicked_1" SelectionChanged="diagram_SelectionChanged_1" ConnectionManipulationCompleted="diagram_ConnectionManipulationCompleted_1" ShapeDeserialized="diagram_ShapeDeserialized" ConnectionDeserialized="diagram_ConnectionDeserialized_1" CommandExecuted="diagram_CommandExecuted_1" KeyDown="diagram_KeyDown_1"  AllowDelete="True" AllowCut="True" />
     </Grid>
 </Window>

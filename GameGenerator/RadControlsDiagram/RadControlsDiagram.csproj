@@ -69,6 +69,9 @@
     <Compile Include="ChooseConnectionType.xaml.cs">
       <DependentUpon>ChooseConnectionType.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RollBackSettings.xaml.cs">
+      <DependentUpon>RollBackSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ConditionSettings.xaml.cs">
       <DependentUpon>ConditionSettings.xaml</DependentUpon>
     </Compile>
@@ -92,6 +95,10 @@
     <Page Include="ChooseConnectionType.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RollBackSettings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="ConditionSettings.xaml">
       <SubType>Designer</SubType>

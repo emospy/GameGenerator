@@ -137,7 +137,11 @@ namespace GameClasses
 		public string Text;
 	}
 
-	public class InventoryCondition : Decision
+    public class ChanceRollBack : Condition
+    {
+    }
+
+    public class InventoryCondition : Decision
 	{
 		public string Name;
 		public int Quantity;
@@ -180,6 +184,7 @@ namespace GameClasses
 		eChance,
 		eBattle,
 		eCondition,
+        eChanceRollback,
 		eInventoryCondition,
 	}
 
@@ -206,7 +211,31 @@ namespace GameClasses
 		public Condition Condition;
 		[XmlElement("InventoryCondition")]
 		public InventoryCondition InventoryCondition;
-	}
+        [XmlElement("ChanceRollback")]
+        public ChanceRollBack ChanceRollback;
+
+        public override string ToString()
+        {
+            switch(Type)
+            {
+                case ConnectionTypes.eDecision:
+                    {
+                        return Decision.Text;
+                    }
+                case ConnectionTypes.eBattle:
+                    return Battle.Text;
+                case ConnectionTypes.eChance:
+                    return Chance.Text;
+                case ConnectionTypes.eChanceRollback:
+                    return ChanceRollback.Text;
+                case ConnectionTypes.eCondition:
+                    return Condition.Text;
+                case ConnectionTypes.eInventoryCondition:
+                    return InventoryCondition.Text;
+            }
+            return "";
+        }
+    }
 
 	public class Choices
 	{
@@ -215,14 +244,16 @@ namespace GameClasses
 		public List<Battle> Battles;
 		public List<Condition> Conditions;
 		public List<InventoryCondition> InventoryConditions;
+        public List<ChanceRollBack> ChanceRollBack;
 
-		public Choices()
+        public Choices()
 		{
 			this.Decisions = new List<Decision>();
 			this.Chances = new List<Chance>();
 			this.Battles = new List<Battle>();
 			this.Conditions = new List<Condition>();
 			this.InventoryConditions = new List<InventoryCondition>();
+            this.ChanceRollBack = new List<ChanceRollBack>();
 		}
 	}
 
