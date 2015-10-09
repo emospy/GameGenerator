@@ -53,6 +53,7 @@ namespace RadControlsDiagram
 		private void btnSelect_Click_1(object sender, RoutedEventArgs e)
 		{
 			this.diagram.ActiveTool = Telerik.Windows.Diagrams.Core.MouseTool.PointerTool;
+            
 		}
 
 		private void btnPan_Click_1(object sender, RoutedEventArgs e)
@@ -526,7 +527,60 @@ namespace RadControlsDiagram
 				}
 			}
 		}
-	}
+
+        private void btnCenter_Click(object sender, RoutedEventArgs e)
+        {
+            this.diagram.AutoFit();
+        }
+
+        private void btnCheckMissing_Click(object sender, RoutedEventArgs e)
+        {
+            var lstEpizodeNumbers = new List<int>();
+            int max = 0;
+
+            foreach(RadDiagramShape sh in this.diagram.Shapes)
+            {
+                var ep = sh.Tag as Epizode;
+                if (ep.EpizodeNumber < 1000)
+                {
+                    if (max < ep.EpizodeNumber)
+                    {
+                        max = ep.EpizodeNumber;
+                    }
+                    lstEpizodeNumbers.Add(ep.EpizodeNumber);
+                }
+            }
+
+            lstEpizodeNumbers = lstEpizodeNumbers.OrderBy(a => a).ToList();
+            var currentCount = lstEpizodeNumbers.Count;
+            var lstNoDupEpizodeNumbers = lstEpizodeNumbers.Distinct().ToList();
+            var NoDupCount = lstNoDupEpizodeNumbers.Count;
+            if(currentCount != NoDupCount)
+            {
+                for (int i = 0; i < lstEpizodeNumbers.Count - 1; i ++)
+                {
+                    if(i + 1 == lstEpizodeNumbers[i + 1])
+                    {
+                        MessageBox.Show("Check epizode " + i + 1 + " for duplication");
+                        break;
+                    }
+                }
+            }
+
+            //look for missing epizodes
+            if (lstNoDupEpizodeNumbers.Count < max)
+            {
+                for (int i = 0; i < lstEpizodeNumbers.Count; i++)
+                {
+                    if (i+ 1 != lstEpizodeNumbers[i])
+                    {
+                        MessageBox.Show("Check epizode " + (i + 1) + " for absence");
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
     static internal class Crypto
     {

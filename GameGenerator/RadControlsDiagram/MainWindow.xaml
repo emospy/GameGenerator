@@ -22,8 +22,10 @@
             <Button Name="btnSave" Click="btnSave_Click_1" Content="Save"/>
             <Button Name="btnLoad" Click="btnLoad_Click_1" Content="Load"/>
             <Button Name="btnGenerateGame" Click="btnGenerateGame_Click_1"  Content="Generate Game"/>
-            <Button Name="btnAddInput" Click="btnAddInput_Click_1"  Content="Add input"/>
+            <Button Name="btnAddInput" Click="btnAddInput_Click_1"  Content="Delete shape"/>
+            <Button Name="btnCenter" Click="btnCenter_Click"  Content="Center diagram"/>
+            <Button Name="btnCheckMissing" Click="btnCheckMissing_Click"  Content="Missing epizodes"/>
         </StackPanel>
-        <telerik:RadDiagram Grid.Column="1" Name="diagram" ShapeDoubleClicked="diagram_ShapeDoubleClicked_1" SelectionChanged="diagram_SelectionChanged_1" ConnectionManipulationCompleted="diagram_ConnectionManipulationCompleted_1" ShapeDeserialized="diagram_ShapeDeserialized" ConnectionDeserialized="diagram_ConnectionDeserialized_1" CommandExecuted="diagram_CommandExecuted_1" KeyDown="diagram_KeyDown_1"  AllowDelete="True" AllowCut="True" />
+        <telerik:RadDiagram Grid.Column="1" Name="diagram" ShapeDoubleClicked="diagram_ShapeDoubleClicked_1" SelectionChanged="diagram_SelectionChanged_1" ConnectionManipulationCompleted="diagram_ConnectionManipulationCompleted_1" ShapeDeserialized="diagram_ShapeDeserialized" ConnectionDeserialized="diagram_ConnectionDeserialized_1" CommandExecuted="diagram_CommandExecuted_1" KeyDown="diagram_KeyDown_1"  AllowDelete="True" AllowCut="True"  />
     </Grid>
 </Window>

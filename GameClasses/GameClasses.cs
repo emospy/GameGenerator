@@ -216,24 +216,33 @@ namespace GameClasses
 
         public override string ToString()
         {
+            string ret = "";
             switch(Type)
             {
                 case ConnectionTypes.eDecision:
-                    {
-                        return Decision.Text;
-                    }
+                    ret = Decision.Text;
+                    break;
                 case ConnectionTypes.eBattle:
-                    return Battle.Text;
+                    ret =  Battle.Text;
+                    break;
                 case ConnectionTypes.eChance:
-                    return Chance.Text;
+                    ret = Chance.Text;
+                    break;
                 case ConnectionTypes.eChanceRollback:
-                    return ChanceRollback.Text;
+                    ret = ChanceRollback.Text;
+                    break;
                 case ConnectionTypes.eCondition:
-                    return Condition.Text;
+                    ret = Condition.Text;
+                    break;
                 case ConnectionTypes.eInventoryCondition:
-                    return InventoryCondition.Text;
+                    ret = InventoryCondition.Text;
+                    break;
             }
-            return "";
+            if (ret.Length > 10)
+            {
+                ret = ret.Substring(0, 10);
+            }
+            return ret;
         }
     }
 
